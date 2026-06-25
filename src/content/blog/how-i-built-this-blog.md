@@ -1,6 +1,6 @@
 ---
 title: "基于 Astro + Three.js + Vercel 搭建个人技术笔记博客"
-description: "记录我如何使用 Astro 框架，并融合 WebGL 着色器、GSAP 动效与自定义 HTML 笔记直链机制，打造属于自己的无缝学习笔记本。"
+description: "记录如何使用 Astro 框架，并融合 WebGL 着色器、GSAP 动效与自定义 HTML 笔记直链机制，打造无缝的学习笔记博客系统。"
 pubDate: 2026-06-25
 tags: ["Astro", "博客搭建", "建站日记"]
 draft: false
@@ -8,57 +8,155 @@ draft: false
 
 # 从零搭建我的技术笔记本
 
-为了能随时记录日常学习中觉得有用的知识（如 LaTeX 排版、音频盲源分离、概率统计笔记和各种小工具教程），我决定为自己量身定制一个个人技术博客。
+为了能随时记录日常学习中觉得有用的知识（如 LaTeX 排版、音频盲源分离、概率统计笔记和各种小工具教程），我搭建了这个个人技术博客。
 
-以下是这个博客的技术选型、优化改造以及一键自动部署的完整心路历程。
-
----
-
-## 🛠️ 技术选型与架构
-
-既然是一个专注于“笔记记录”的博客，在选型上我首要考虑的是**极速的加载性能**和**优雅的视觉呈现**。因此，最终确定了以下技术栈：
-
-*   **Astro**：目前最优秀的静态站点生成器 (SSG)，只在需要交互的组件上才加载 JS (Island 架构)，性能无可挑剔。
-*   **TypeScript**：保证代码的严谨与可维护性。
-*   **Tailwind CSS**：现代化的原子样式，方便微调卡片、边框及响应式栅格。
-*   **Three.js**：在首页卡片和页头中集成 WebGL 画布，使用自定义顶点着色器 (Vertex Shader) 与片元着色器 (Fragment Shader) 渲染具有脉冲发光和波纹效果的 3D 文字背景。
-*   **GSAP**：用于实现入场动效、列表平滑淡入、波形信号指示器以及鼠标悬停 3D 卡片倾斜（Tilt）交互。
+以下是这个博客的项目构成、技术选型、关键代码实现以及自动部署的总结。
 
 ---
 
-## 🎨 细节体验优化与功能定制
+## 项目目录与构成解析
 
-在搭建过程中，为了让阅读体验更自然、更强劲，我进行了一些针对性的优化与定制：
+本博客基于 Astro 框架搭建，采用组件化与数据驱动的设计方式。核心项目结构如下：
 
-### 1. 无缝集成复杂的 HTML 静态笔记（解决公式排版痛点）
-我的数学类笔记（如《概率论与数理统计》）通常包含大量复杂且密集的 LaTeX 公式。如果直接用 Markdown 编写，可能需要配置繁琐的 MathJax / KaTeX 渲染插件，且容易产生兼容问题。
-- **解决方案**：我升级了 Astro 博客的数据校验 schema，新增了可选的 `redirectUrl` 字段。
-- 把由其他工具生成的、渲染完美的 `概率统计.html` 直接放进静态托管目录 `public/` 中，并在 Markdown 占位文件中配置 `redirectUrl: "/概率统计.html"`。
-- 修改路由和列表逻辑，使用户点击卡片或直链时，能**直接、无缝地重定向**到最完美渲染的静态 HTML 文件上，极大地提升了内容呈现的速度和准确性。
+```text
+blog/
+├── astro.config.mjs          # Astro 配置文件，集成 MDX 和 Vite 缓存设置
+├── package.json              # 依赖包声明（包含 astro, three, gsap, tailwindcss）
+├── src/
+│   ├── components/           # 页面公共组件
+│   │   ├── ShaderAnimation.astro   # 基于 Three.js 着色器绘制的 3D 背景
+│   │   └── ThemeToggle.astro       # 主题切换下拉菜单组件
+│   ├── content/              # 博客文章数据源
+│   │   └── blog/                   # 存放 Markdown/MDX 文章及附件
+│   ├── content.config.ts     # 数据集合（Collections）的架构校验文件
+│   ├── layouts/              # 页面模板布局
+│   │   ├── BaseLayout.astro        # 包含导航栏、页脚及全局样式的通用模板
+│   │   └── BlogPostLayout.astro    # 博客文章详情页专用模板
+│   ├── pages/                # 基于文件的路由系统
+│   │   ├── index.astro             # 博客首页
+│   │   ├── about.astro             # 关于我页面
+│   │   ├── projects.astro          # 项目展示页面
+│   │   ├── blog/                   # 文章列表及动态详情路由（[slug].astro）
+│   │   └── tags/                   # 标签归档路由
+│   ├── styles/               # 样式管理
+│   │   └── global.css              # 全局样式，包含设计系统与毛玻璃特效
+│   └── site.config.ts        # 站点与作者个人信息全局配置
+```
 
-### 2. 三态主题切换（浅色/深色/跟随系统）
-一个舒服的阅读环境怎么能少得了深色模式？
-- **主题组件**：实现了一个悬浮式下拉切换器，允许用户手动选择“浅色”、“深色”或“跟随系统”。
-- **变量化配色**：重构了全局 CSS，使用 CSS 变量来承载各种主题颜色，并在 `.dark` 类下覆盖暗色配色，配合 `transition` 属性实现丝滑的明暗切换。
-- **阻断白屏闪烁 (FOUC)**：在 HTML 的 `<head>` 第一行嵌入了同步执行的极简脚本。它在页面解析开始前阻断渲染，快速判定本地缓存和系统偏好并为 `<html>` 添加 `.dark` 类名，完美避免了“深色模式刷新瞬间闪烁一下白屏”的糟糕体验。
-
-### 3. 卡片布局 Bug 修复
-在之前的设计中，文章列表默认卡片使用双列网格布局（左侧留给封面图）。如果文章没有上传封面图（如本教程），唯一的文字就会被强行压缩在最左侧的 180px 宽度里，右侧留下大量空白。
-- **修复方法**：利用 Astro 的 `class:list` 对最新文章卡片和列表卡片进行条件渲染。如果检测到文章不包含封面图，布局将自动降级为正常的块级元素（`block`），使标题和描述文字能自然舒展地向右铺满整张卡片。
+在 Astro 架构中，`src/content/` 充当本地“数据库”，所有的文章以标准格式存放于此。`src/pages/` 通过文件系统路由自动将页面生成为静态 HTML 文件，保证极佳的加载性能。
 
 ---
 
-## 🚀 托管与全自动持续集成 (CI/CD)
+## 技术选型与核心优势
 
-项目最终托管在 **Vercel** 上，整个上线和后续写作流程达到了完全的自动化：
+在选型上，本项目主要考虑极速的加载体验和优秀的视觉交互：
+
+1.  **Astro**：采用 Islands 孤岛架构，默认生成零 JS 的纯静态页面，仅在主题切换等需要交互的组件上才加载少量的客户端 JS。
+2.  **Tailwind CSS (v4)**：利用 CSS 优先的设计系统快速定义微调卡片、边框及响应式网格。
+3.  **Three.js**：在首页和卡片中集成 WebGL 画布，通过自定义片元着色器渲染具有脉冲发光和波纹起伏特效的 3D 文字背景。
+4.  **GSAP**：处理入场过渡、卡片滚动淡入、信号波形动画以及鼠标悬停 3D 卡片倾斜交互。
+
+---
+
+## 关键技术点与代码实现
+
+在博客的开发过程中，为提升交互性能并解决公式排版问题，我实现了以下核心代码：
+
+### 1. Tailwind v4 自定义类名深色模式
+
+Tailwind CSS v4 默认基于操作系统的媒体查询（`prefers-color-scheme`）触发 `dark:` 前缀样式。为了让用户手动切换“浅色”/“深色”时，样式能与页面 `html` 标签的 `.dark` 类名保持同步，我在 `global.css` 中配置了自定义变体规则：
+
+```css
+@import "tailwindcss";
+
+/* 强制 Tailwind 使用类名选择器而非系统媒体查询 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-ink: var(--theme-ink);
+  --color-muted: var(--theme-muted);
+  --color-paper: var(--theme-paper);
+}
+
+:root {
+  --theme-ink: #1f2933;
+  --theme-paper: #fffdf9;
+}
+
+.dark {
+  --theme-ink: #e2e8f0;
+  --theme-paper: #0b0f19;
+}
+```
+
+### 2. 阻断白屏闪烁的同步主题脚本
+
+为了防止用户在使用深色模式时刷新页面瞬间闪现白屏（FOUC 现象），我们将主题判定脚本放置在 `BaseLayout.astro` 的 `<head>` 顶端。该脚本采用同步执行机制，在浏览器渲染正文前完成类名添加：
+
+```html
+<head>
+  <meta charset="UTF-8" />
+  <script is:inline>
+    const getTheme = () => {
+      const saved = localStorage.getItem('theme');
+      if (saved && saved !== 'system') return saved;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    const isDark = getTheme() === 'dark';
+    document.documentElement.classList.toggle('dark', isDark);
+    document.documentElement.dataset.theme = localStorage.getItem('theme') || 'system';
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+```
+
+### 3. 静态 HTML 笔记直链与重定向机制
+
+数学类笔记（如概率统计）中含有大量复杂的数学公式。直接转成 Markdown 排版复杂且公式易解析出错。我的做法是直接将渲染好的静态 `概率统计.html` 放入 `public/` 静态目录，并在文章元信息中定义 `redirectUrl` 路径进行直接链接。
+
+对于直接键入网址访问的用户，我们在动态路由 `[slug].astro` 中实现了客户端自动重定向：
+
+```html
+---
+const { post } = Astro.props;
+
+let Content = null;
+let headings = [];
+if (!post.data.redirectUrl) {
+  const rendered = await render(post);
+  Content = rendered.Content;
+  headings = rendered.headings;
+}
+---
+
+{
+  post.data.redirectUrl ? (
+    <html>
+      <head>
+        <meta http-equiv="refresh" content={`0;url=${post.data.redirectUrl}`} />
+        <script is:inline define:vars={{ url: post.data.redirectUrl }}>
+          window.location.replace(url);
+        </script>
+      </head>
+      <body>
+        <p>正在跳转...</p>
+      </body>
+    </html>
+  ) : (
+    <BlogPostLayout post={post} headings={headings}>
+      <Content />
+    </BlogPostLayout>
+  )
+}
+```
+
+---
+
+## 托管与持续集成
+
+项目目前部署在 Vercel 平台上，整个发布流程为自动持续集成：
 
 1. 本地新撰写一篇文章，或者修改代码。
-2. 运行 `git push` 将更新推送到 [GitHub 仓库](https://github.com/LiH001/blog)。
-3. Vercel 接收到 GitHub 的推送事件，自动在云端执行 `npm run build`。
-4. 构建打包无误后，新内容会在一分钟内自动同步更新到线上网址，整个过程完全不需要手动部署干预。
-
----
-
-## 📝 结语
-
-写这个博客的初衷就是“整理一下相关笔记”，它摒弃了冗余的插件，把最核心的性能与视觉体验打磨得干干净净。这里将成为我记录技术探索和数学思考的自留地。
+2. 运行 `git push` 将更新推送至 GitHub 仓库。
+3. Vercel 接收 GitHub 推送钩子，自动在云端执行打包编译命令。
+4. 构建通过后，新修改的内容会在一分钟内同步并刷新至线上地址，无需任何手动打包与服务器上传操作。
