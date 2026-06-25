@@ -1,4 +1,4 @@
-# 🌟 Personal Tech Blog | LiH 的个人技术笔记
+# Personal Tech Blog | LiH 的个人技术笔记
 
 [![Astro](https://img.shields.io/badge/Astro-v5.x-ff5a03?style=flat-square&logo=astro)](https://astro.build/)
 [![TailwindCSS](https://img.shields.io/badge/TailwindCSS-v4.x-38bdf8?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
@@ -7,24 +7,24 @@
 
 这是一个基于 **Astro**、**Tailwind CSS v4** 和 **TypeScript** 搭建的轻量级、响应式个人技术笔记博客。集成了 **Three.js** 3D 自定义着色器背景以及 **GSAP** 微交互动效，提供极致的视觉体验和顺滑的使用手感。
 
-📂 **项目地址**：[https://github.com/LiH001/blog](https://github.com/LiH001/blog)  
-🌐 **在线演示**：[https://blog-five-mocha-42.vercel.app/](https://blog-five-mocha-42.vercel.app/)
+**项目地址**：[https://github.com/LiH001/blog](https://github.com/LiH001/blog)  
+**在线演示**：[https://blog-five-mocha-42.vercel.app/](https://blog-five-mocha-42.vercel.app/)
 
 ---
 
-## ✨ 核心特性
+## 核心特性
 
-- 🎨 **极具质感的视觉设计**：采用现代**毛玻璃拟物风 (Glassmorphism)** 设计，搭配精致的网格背景与半透明卡片阴影。
-- 🌓 **三态主题切换**：支持 ☀️ 浅色 (Light)、🌙 深色 (Dark) 和 💻 跟随系统 (System) 三种主题模式，通过内联同步脚本优化，彻底**防止页面加载时的白屏闪烁 (FOUC)**。
-- 🎭 **深色主题对比度优化**：针对深色模式重新设计了所有按钮、分类标签云（Tags）、卡片和代码块的配色方案，确保在任何屏幕和光线下都有高水平的对比度和极佳的可读性。
-- 🔮 **着色器 3D 动效背景**：使用 **Three.js** 开发的自定义片元/顶点着色器（Fragment/Vertex Shader）背景，为博客带来生动的流动感和未来感。
-- 🚀 **极速静态生成 (SSG)**：基于 Astro 纯静态路由渲染，页面秒开。
-- 📝 **Markdown & MDX 深度集成**：支持快速编写数学公式、插入代码段并集成 Shiki 代码语法着色（使用 `github-dark` 主题）。
-- 📑 **内容集合规范管理**：基于 Astro Content Collections，实现文章发布状态过滤、按时间倒序排列、自动化标签关联等。
+- **极具质感的视觉设计**：采用现代**毛玻璃拟物风 (Glassmorphism)** 设计，搭配精致的网格背景与半透明卡片阴影。
+- **三态主题切换**：支持浅色 (Light)、深色 (Dark) 和跟随系统 (System) 三种主题模式，通过内联同步脚本优化，彻底**防止页面加载时的白屏闪烁 (FOUC)**。
+- **深色主题对比度优化**：针对深色模式重新设计了所有按钮、分类标签云（Tags）、卡片和代码块的配色方案，确保在任何屏幕和光线下都有高水平的对比度和极佳的可读性。
+- **着色器 3D 动效背景**：使用 **Three.js** 开发的自定义片元/顶点着色器（Fragment/Vertex Shader）背景，为博客带来生动的流动感和未来感。
+- **极速静态生成 (SSG)**：基于 Astro 纯静态路由渲染，页面秒开。
+- **Markdown & MDX 深度集成**：支持快速编写数学公式、插入代码段并集成 Shiki 代码语法着色（使用 `github-dark` 主题）。
+- **内容集合规范管理**：基于 Astro Content Collections，实现文章发布状态过滤、按时间倒序排列、自动化标签关联等。
 
 ---
 
-## 🛠 技术栈
+## 技术栈
 
 | 模块 | 选型 | 说明 |
 | :--- | :--- | :--- |
@@ -39,7 +39,7 @@
 
 ---
 
-## 📂 项目结构
+## 项目结构
 
 ```bash
 blog/
@@ -59,7 +59,7 @@ blog/
 
 ---
 
-## 🚀 快速开始
+## 快速开始
 
 ### 1. 克隆并进入仓库
 
@@ -100,7 +100,7 @@ npm run preview
 
 ---
 
-## 🌐 部署与自动化
+## 部署与自动化
 
 本项目现已完美适配 **Vercel** 自动化静态页面托管。
 
@@ -108,6 +108,6 @@ npm run preview
 
 ---
 
-## 📝 许可证
+## 许可证
 
 本项目基于 [MIT License](./LICENSE) 许可发布。
