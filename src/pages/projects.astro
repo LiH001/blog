@@ -1,0 +1,37 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const projects = [
+  {
+    name: 'LaTeX 数学笔记模板 (LuChunChun)',
+    description: '一个美观实用的 LaTeX 数学笔记模板，内置常用数学、绘图与排版宏包，支持自定义封面、目录背景以及跨页自动断行的彩色定理环境。',
+    link: 'https://github.com/LiH001/latex-template'
+  },
+  {
+    name: '鸡尾酒会音频盲分离 (Cocktail Party Problem)',
+    description: '艺术认知与计算课程期末作业。基于 BLSTM 与深度聚类及 Chimera 风格软掩码（PIT）流程，实现单通道双人混合语音的盲源分离，并配有 Streamlit 交互展示界面。',
+    link: 'https://github.com/LiH001/Cocktail-Party-Problem'
+  }
+];
+---
+
+<BaseLayout title="项目" description="个人项目、实验和开源作品。">
+  <section class="mb-8">
+    <h1 class="text-4xl font-black tracking-normal text-ink">项目</h1>
+    <p class="mt-3 text-lg text-muted">放一些已经完成或正在进行的作品。</p>
+  </section>
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    {
+      projects.map((project) => (
+        <article data-animate="card" data-tilt-card class="glass-card rounded-lg p-5 transition">
+          <h2 class="text-xl font-bold text-ink">{project.name}</h2>
+          <p class="mt-3 min-h-20 leading-7 text-muted">{project.description}</p>
+          <a class="mt-5 inline-flex text-sm font-semibold text-accent hover:underline" href={project.link}>
+            查看项目
+          </a>
+        </article>
+      ))
+    }
+  </div>
+</BaseLayout>

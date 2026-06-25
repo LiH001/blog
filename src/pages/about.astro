@@ -1,0 +1,49 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { siteConfig } from '@/site.config';
+---
+
+<BaseLayout title="关于我" description="关于作者、关注方向和联系方式。">
+  <section class="glass-panel max-w-4xl rounded-lg p-6 sm:p-8">
+    <div data-animate="hero" class="mb-8 flex flex-wrap items-center gap-5">
+      <img
+        class="soft-ring size-24 rounded-lg object-cover"
+        src={siteConfig.author.avatar}
+        alt={`${siteConfig.author.name} 的头像`}
+      />
+      <div>
+        <h1 class="text-4xl font-black tracking-normal text-ink">{siteConfig.author.name}</h1>
+        <p class="mt-2 text-muted">{siteConfig.author.role}</p>
+      </div>
+    </div>
+    <div data-animate="card" class="prose mt-6 max-w-none">
+      <p>
+        你好，我是 {siteConfig.author.name}。
+      </p>
+      <p>
+        这个博客是我在日常学习和实践中建立的个人笔记本，主要用于记录任何我觉得可能有用的技术知识、课程作业以及实用小教程。
+      </p>
+      <p>
+        {siteConfig.author.bio}
+      </p>
+      <h2>记录与探索方向</h2>
+      <ul>
+        <li><strong>数学与统计</strong>：概率论与数理统计等数学学科的期末考点、公式汇总与重点复习笔记。</li>
+        <li><strong>音频盲源分离</strong>：基于深度学习（如 BLSTM 深度聚类与软掩码模型）进行单通道双人混合语音分离的相关课程项目与实验。</li>
+        <li><strong>LaTeX 学术排版</strong>：设计和开发 LaTeX 数学笔记模板（如 LuChunChun），内置常用数学、绘图宏包与定理环境。</li>
+        <li><strong>实用开发与网络爬虫</strong>：日常探索中积累的实用技术教程（例如 TronClass 题库数据抓取与解析等）。</li>
+      </ul>
+      <h2>联系方式</h2>
+      <p>
+        {
+          siteConfig.author.links.map((link, index) => (
+            <>
+              <a href={link.href}>{link.label}</a>
+              {index < siteConfig.author.links.length - 1 ? ' · ' : ''}
+            </>
+          ))
+        }
+      </p>
+    </div>
+  </section>
+</BaseLayout>

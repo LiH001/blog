@@ -1,0 +1,45 @@
+---
+import { getCollection, render } from 'astro:content';
+import BlogPostLayout from '@/layouts/BlogPostLayout.astro';
+import { postToSlug } from '@/utils/content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  return posts.map((post) => ({
+    params: { slug: postToSlug(post) },
+    props: { post }
+  }));
+}
+
+const { post } = Astro.props;
+
+let Content = null;
+let headings = [];
+if (!post.data.redirectUrl) {
+  const rendered = await render(post);
+  Content = rendered.Content;
+  headings = rendered.headings;
+}
+---
+
+{
+  post.data.redirectUrl ? (
+    <html>
+      <head>
+        <meta http-equiv="refresh" content={`0;url=${post.data.redirectUrl}`} />
+        <script is:inline define:vars={{ url: post.data.redirectUrl }}>
+          window.location.replace(url);
+        </script>
+      </head>
+      <body>
+        <p>正在跳转到 <a href={post.data.redirectUrl}>{post.data.title}</a>...</p>
+      </body>
+    </html>
+  ) : (
+    <BlogPostLayout post={post} headings={headings}>
+      <Content />
+    </BlogPostLayout>
+  )
+}
+
