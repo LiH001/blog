@@ -34,16 +34,14 @@ import { siteConfig } from '@/site.config';
         <li><strong>实用开发与网络爬虫</strong>：日常探索中积累的实用技术教程（例如 TronClass 题库数据抓取与解析等）。</li>
       </ul>
       <h2>联系方式</h2>
-      <p>
-        {
-          siteConfig.author.links.map((link, index) => (
-            <>
-              <a href={link.href}>{link.label}</a>
-              {index < siteConfig.author.links.length - 1 ? ' · ' : ''}
-            </>
-          ))
-        }
-      </p>
+      <div class="flex flex-col gap-2 mt-4">
+        <div>
+          <a href="https://github.com/LiH001" class="text-accent hover:underline font-semibold">GitHub</a>：LiH001
+        </div>
+        <div>
+          <a href="mailto:lihow@stu.xmu.edu.cn" class="text-accent hover:underline font-semibold">Email</a>：lihow@stu.xmu.edu.cn
+        </div>
+      </div>
     </div>
   </section>
 </BaseLayout>
