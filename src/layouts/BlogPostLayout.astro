@@ -19,6 +19,16 @@ const visibleHeadings = headings.filter((heading) => heading.depth > 1 && headin
   image={post.data.cover}
   type="article"
 >
+  <script is:inline>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
   <article class="mx-auto max-w-4xl">
     <header class="mb-8">
       <div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted">
